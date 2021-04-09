@@ -1,0 +1,38 @@
+.info {
+  margin: 0;
+}
+
+.list {
+  margin-top: 30px;
+  padding: 0 10px;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  /* border-bottom: dashed; */
+}
+
+.item:not(:last-child) {
+  margin-bottom: 15px;
+}
+
+.btn {
+  margin-left: 5px;
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  display: inline-block;
+  background-image: url(../../images/bin.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
