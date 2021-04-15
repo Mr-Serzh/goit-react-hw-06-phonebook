@@ -12,7 +12,15 @@
 .item {
   display: flex;
   justify-content: space-between;
-  /* border-bottom: dashed; */
+  align-items: center;
+  padding: 10px 20px;
+
+  background-color: #d6dde6;
+
+  box-shadow: 0px 2px 1px rgb(0 0 0 / 20%), 0px 1px 1px rgb(0 0 0 / 14%),
+    0px 1px 3px rgb(0 0 0 / 12%);
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 .item:not(:last-child) {
@@ -20,14 +28,10 @@
 }
 
 .btn {
-  margin-left: 5px;
-  width: 30px;
-  height: auto;
+  margin-left: 15px;
+  padding: 0;
   cursor: pointer;
   display: inline-block;
-  background-image: url(../../images/bin.svg);
-  background-repeat: no-repeat;
-  background-size: contain;
   background-color: transparent;
   border: none;
   outline: none;
@@ -35,4 +39,5 @@
 
 .btn:hover {
   transform: scale(1.1);
+  fill: #e50914;
 }

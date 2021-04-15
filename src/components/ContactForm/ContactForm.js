@@ -1,61 +1,109 @@
-import { Component } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from '../../redux/actions';
+import { getContacts } from '../../redux/selectors';
+import Cleave from 'cleave.js/react';
+import { toast } from 'react-toastify';
 import s from './ContactForm.module.css';
 
-export default class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
+export default function ContactForm() {
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  handleChange = e => {
-    const { name, value } = e.currentTarget;
-
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.props.onSubmit(this.state);
-
-    this.setState({ name: '', number: '' });
-  };
-
-  render() {
-    const { name, number } = this.state;
-    return (
-      <form className={s.form} onSubmit={this.handleSubmit}>
-        <label className={s.label}>
-          <span className={s.title}>Name</span>
-          <input
-            className={s.input}
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-            placeholder="Jennifer Aniston"
-          />
-        </label>
-        <label className={s.label}>
-          <span className={s.title}>Number</span>
-          <input
-            className={s.input}
-            type="tel"
-            name="number"
-            value={number}
-            onChange={this.handleChange}
-            placeholder="777-77-77"
-          />
-        </label>
-        <button className={s.btn} type="submit">
-          Add contact
-        </button>
-      </form>
+  const checkRepeatName = name => {
+    return contacts.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase(),
     );
-  }
-}
+  };
 
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
+  const checkRepeatNumber = number => {
+    return contacts.find(contact => contact.number === number);
+  };
+
+  const checkEmptyQuery = (name, number) => {
+    return name.trim() === '' || number.trim() === '';
+  };
+
+  const checkValidNumber = number => {
+    return !/\d{3}[-]\d{2}[-]\d{2}/g.test(number);
+  };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (checkRepeatName(name)) {
+      toast.warn(`${name} is already in the phonebook.`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else if (checkRepeatNumber(number)) {
+      toast.warn(`${number} is already in the phonebook.`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else if (checkEmptyQuery(name, number)) {
+      toast.info("Enter the contact's name and number phone!", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else if (checkValidNumber(number)) {
+      toast.error('Enter the correct number phone!', {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else {
+      dispatch(addContact(name, number));
+    }
+    resetInput();
+  };
+
+  const resetInput = () => {
+    setName('');
+    setNumber('');
+  };
+
+  return (
+    <form className={s.form} onSubmit={handleSubmit}>
+      <label className={s.label}>
+        <span className={s.title}>Name</span>
+        <input
+          className={s.input}
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+          placeholder="Jennifer Aniston"
+        />
+      </label>
+      <label className={s.label}>
+        <span className={s.title}>Number</span>
+        <Cleave
+          options={{ delimiter: '-', blocks: [3, 2, 2] }}
+          placeholder="734-85-92"
+          type="tel"
+          name="number"
+          value={number}
+          onChange={handleChange}
+          className={s.input}
+        />
+      </label>
+      <button className={s.btn} type="submit">
+        Add contact
+      </button>
+    </form>
+  );
+}
