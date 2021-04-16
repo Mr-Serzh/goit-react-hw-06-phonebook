@@ -6,7 +6,7 @@
 
 img {
   display: inline-block;
-  max-width: 100%;
+  max-width: 100vw;
   height: auto;
 }
 
@@ -24,8 +24,6 @@ li {
 
   text-align: center;
   padding: 20px 15px;
-  height: 100vh;
-  /* height: auto; */
 
   background-image: linear-gradient(
       to right,
@@ -36,5 +34,6 @@ li {
   background-color: #e7ecf2;
   background-repeat: no-repeat;
   background-position: center;
+  background-attachment: fixed;
   background-size: cover;
 }
